@@ -23,7 +23,7 @@ import (
 	v1 "github.com/fatedier/frp/pkg/config/v1"
 )
 
-func ValidateServerConfig(c *v1.ServerConfig) (Warning, error) {
+func (v *ConfigValidator) ValidateServerConfig(c *v1.ServerConfig) (Warning, error) {
 	var (
 		warnings Warning
 		errs     error
@@ -34,6 +34,8 @@ func ValidateServerConfig(c *v1.ServerConfig) (Warning, error) {
 	if !lo.Every(SupportedAuthAdditionalScopes, c.Auth.AdditionalScopes) {
 		errs = AppendError(errs, fmt.Errorf("invalid auth additional scopes, optional values are %v", SupportedAuthAdditionalScopes))
 	}
+
+	errs = AppendError(errs, v.validateAuthTokenSource(c.Auth.Token, c.Auth.TokenSource))
 
 	if err := validateLogConfig(&c.Log); err != nil {
 		errs = AppendError(errs, err)

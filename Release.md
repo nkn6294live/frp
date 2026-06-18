@@ -1,8 +1,9 @@
-### Notes
+## Features
 
-*   **Feature Gates Introduced:** This version introduces a new experimental mechanism called Feature Gates. This allows users to enable or disable specific experimental features before they become generally available. Feature gates can be configured in the `featureGates` map within the configuration file.
-*   **VirtualNet Feature Gate:** The first available feature gate is `VirtualNet`, which enables the experimental Virtual Network functionality (currently in Alpha stage).
+* `transport.wireProtocol = "v2"` now also applies to UDP-based proxy payloads, including ordinary UDP and SUDP, so their payload framing is consistent with the selected wire protocol.
+* Improved SUDP compatibility during mixed `transport.wireProtocol` deployments, allowing frps to bridge payloads between v1/default and v2 SUDP clients.
+* XTCP work connection `NatHoleSid` messages now follow the selected `transport.wireProtocol`.
 
-### Features
+## Compatibility Notes
 
-*   **Virtual Network (VirtualNet):** Introduce experimental virtual network capabilities (Alpha). This allows creating a TUN device managed by frp, enabling Layer 3 connectivity between different clients within the frp network. Requires root/admin privileges and is currently supported on Linux and macOS. Configuration is done via the `virtualNet` section and the `virtual_net` plugin. Enable with feature gate `VirtualNet`. **Note: As an Alpha feature, configuration details may change in future releases.**
+* When enabling `transport.wireProtocol = "v2"` for SUDP, upgrade both the proxy and visitor frpc instances first, or keep them on `v1` until both sides are upgraded.
